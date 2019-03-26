@@ -43,15 +43,15 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               new Image.asset(
                 "images/logo/logo.png",
-                width: 200.0,
-                height: 200.0,
+                width: 150.0 / MediaQuery.of(context).size.aspectRatio,
+                height: 150.0 / MediaQuery.of(context).size.aspectRatio,
                 fit: BoxFit.cover,
               ),
               new Text(
                 "Pizza Ordering Demo Home Page",
               ),
               new Container(
-                  margin: const EdgeInsets.only(top: 200.0),
+                  margin: EdgeInsets.only(top: (300 * MediaQuery.of(context).size.aspectRatio)),
                   child: new ButtonTheme(
                       minWidth: 200.0,
                       height: 50.0,

@@ -45,8 +45,9 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
 
   Widget _buildItemsList() {
     var size = MediaQuery.of(context).size;
-    final int itemHeight = ((size.height - kToolbarHeight + 65) / 3).round();
-    final int itemWidth = (size.width / 2).round();
+    final int itemHeight = (((size.height * size.aspectRatio).round() - (kToolbarHeight* size.aspectRatio).round() )/ 3).ceil();
+    print(size.aspectRatio);
+    final int itemWidth = ((size.width * size.aspectRatio).round() / 2).ceil();
 
     Widget itemCards;
 
@@ -54,7 +55,7 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
 
     if (pizzaExamples.length > 0) {
       itemCards =  new GridView.count(
-        childAspectRatio: (itemWidth / itemHeight),
+        childAspectRatio: 0.96,
         scrollDirection: Axis.vertical,
         crossAxisCount: 2,
         children: new List.generate(pizzaExamples.length, (index){
@@ -86,9 +87,4 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
     }
     return itemCards;
   }
-
-//    var size = MediaQuery.of(context).size;
-//    final int itemHeight = ((size.height - kToolbarHeight + 5) / 2).round();
-//    final int itemWidth = (size.width / 2).round();
-
 }
