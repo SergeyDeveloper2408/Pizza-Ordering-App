@@ -1,46 +1,55 @@
 import 'package:flutter/material.dart';
-
-void main() => runApp(new Preview());
+import 'package:pizza_ordering_app/data/pizza.dart';
+import 'package:pizza_ordering_app/data/pizza_size.dart';
+import 'package:pizza_ordering_app/utils/generate_pizza_util.dart';
 
 class Preview extends StatefulWidget {
 
-  final String kindOfPizza;
+  final Pizza pizza;
 
-  Preview({Key key, @required this.kindOfPizza}) : super(key: key);
+  Preview({Key key, @required this.pizza}) : super(key: key);
 
   @override
-  _PreviewState createState() => new _PreviewState(kindOfPizza);
+  _PreviewState createState() => new _PreviewState(pizza);
 }
 
 class _PreviewState extends State<Preview> {
 
-  final String kindOfPizza;
+  final Pizza pizza;
+  final List<PizzaSize> _pizzaSizes = GeneratePizzaUtil.getPizzaSizes();
+  PizzaSize _pizzaSize;
 
-  _PreviewState(this.kindOfPizza);
+  String _pizzaPrice;
+  String _pizzaWeight;
 
-  String _dropdownValue;
-  final List<String> _dropdownValues = ["Small", "Middle", "Large"];
+  _PreviewState(this.pizza);
 
-  void _onDropDownButtonItemChanged(String value){
+  @override
+  void initState() {
+    super.initState();
+    _setPriceAndWeight(_pizzaSizes.elementAt(2));
+  }
+
+  void _setPriceAndWeight(PizzaSize pizzaSize){
     setState(() {
-      _dropdownValue = value;
+      _pizzaSize = pizzaSize;
+      _pizzaPrice = "${(pizza.cost * pizzaSize.price).toString()} \$";
+      _pizzaWeight = pizzaSize.weight;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Color(0xFF205d9c),
+      backgroundColor: new Color(pizza.backgroundColor),
       appBar: new AppBar(
-        backgroundColor: Color(0xFF205d9c),
-        title: new Text(kindOfPizza),
+        backgroundColor: new Color(pizza.backgroundColor),
+        title: new Text(pizza.name),
       ),
       body: new Container(
         child: new Column(
           children: <Widget>[
-            new Center(
-              child: createPreviewImage()
-            ),
+            createPreviewImage(),
             createDescriptionText(),
             createDropDownButton(),
             createPriceRow(),
@@ -54,23 +63,23 @@ class _PreviewState extends State<Preview> {
   Widget createPriceRow(){
     return new Container(
       height: 30.0,
-      margin: EdgeInsets.only(top: 30.0),
+      margin: const EdgeInsets.only(top: 30.0),
       padding: const EdgeInsets.only(left: 40.0, right: 40.0),
       child: new Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           new Container(
             alignment: Alignment.bottomRight,
             child: new Text(
-              "150 \$",
-              style: new TextStyle(fontSize: 25.0, color: Colors.white,),
+              _pizzaPrice,
+              style: new TextStyle(fontSize: 25.0, color: Colors.white),
             ),
           ),
           new Container(
             alignment: Alignment.bottomRight,
-            margin: const EdgeInsets.only(left: 20.0),
+            margin: const EdgeInsets.only(left: 10.0),
             child: new Text(
-              "650 g",
+              _pizzaWeight,
               style: new TextStyle(fontSize: 15.0, color: Colors.white),
             )
           )
@@ -97,16 +106,14 @@ class _PreviewState extends State<Preview> {
   }
 
   Widget createPreviewImage(){
-    return new Image.asset(
-      "images/pizza_examples/newyork_style_pizza_example.jpg",
-      width: 200.0,
-      height: 200.0,
+    return new Center(
+        child: new Image.asset(pizza.imagePath, width: 200.0, height: 200.0)
     );
   }
 
   Widget createDropDownButton(){
     return new Container(
-      margin: EdgeInsets.only(top: 20.0),
+      margin: const EdgeInsets.only(top: 20.0),
         decoration: new ShapeDecoration(
           shape: new RoundedRectangleBorder(
             side: new BorderSide(width: 1.0, style: BorderStyle.solid, color: Colors.white),
@@ -120,24 +127,24 @@ class _PreviewState extends State<Preview> {
             child: new Theme(
               data: Theme.of(context).copyWith(
                   brightness: Brightness.dark,
-                  canvasColor: Colors.blue
+                  canvasColor: new Color(pizza.backgroundColor)
               ),
               child: new DropdownButton(
                 style: new TextStyle(color: Colors.white, decorationColor: Colors.white),
-                value: _dropdownValue,
-                items: _dropdownValues.map((String item){
+                value: _pizzaSize,
+                items: _pizzaSizes.map((PizzaSize pizzaSize){
                   return new DropdownMenuItem(
-                      value: item,
+                      value: pizzaSize,
                       child: new Row(
                         children: <Widget>[
                           new Icon(Icons.local_pizza, color: Colors.white,),
-                          new Text(" Size:  $item", style: new TextStyle(color: Colors.white))
+                          new Text(" Size:  ${pizzaSize.description}", style: new TextStyle(color: Colors.white))
                         ],
                       )
                   );
                 }).toList(),
-                onChanged: (String value) {_onDropDownButtonItemChanged(value);},
-                hint: new Text('DropdownButton Hint', style: new TextStyle(color: Colors.white)),
+                onChanged: (PizzaSize value) {_setPriceAndWeight(value);},
+                hint: new Text('Choose size', style: new TextStyle(color: Colors.white)),
               ),
             ),
           )
@@ -149,9 +156,7 @@ class _PreviewState extends State<Preview> {
     return new Container(
       padding: const EdgeInsets.only(left: 40.0, right: 40.0),
       child: new Text(
-        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
-            'Alps. Situated 1,578 meters above sea level, it is one of the '
-            'enjoyed here include rowing.',
+        pizza.description,
         softWrap: true,
         style: new TextStyle(color: Colors.white),
       ),

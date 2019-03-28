@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pizza_ordering_app/utils/util.dart';
+import 'package:pizza_ordering_app/utils/generate_pizza_util.dart';
 import 'package:pizza_ordering_app/preview/preview.dart';
-
-void main() => runApp(new PizzaList());
+import 'package:pizza_ordering_app/data/pizza.dart';
 
 class PizzaList extends StatelessWidget {
   @override
@@ -36,36 +35,32 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.shopping_cart),
+      floatingActionButton: new FloatingActionButton(
+        child: new Icon(Icons.shopping_cart),
         onPressed: (){},
       ),
     );
   }
 
   Widget _buildItemsList() {
-    var size = MediaQuery.of(context).size;
-    final int itemHeight = (((size.height * size.aspectRatio).round() - (kToolbarHeight* size.aspectRatio).round() )/ 3).ceil();
-    print(size.aspectRatio);
-    final int itemWidth = ((size.width * size.aspectRatio).round() / 2).ceil();
-
     Widget itemCards;
+    List<Pizza> pizzaList = GeneratePizzaUtil.getPizzaList();
 
-    Map<String, String> pizzaExamples = Util.pizzaExamplesPaths;
-
-    if (pizzaExamples.length > 0) {
-      itemCards =  new GridView.count(
+    if (pizzaList.length > 0) {
+      itemCards = new GridView.count(
         childAspectRatio: 0.96,
         scrollDirection: Axis.vertical,
         crossAxisCount: 2,
-        children: new List.generate(pizzaExamples.length, (index){
+        children: new List.generate(pizzaList.length, (index){
           return new GestureDetector(
               child: new Container(
-                padding: const EdgeInsets.only(top: 0.5, bottom: 0.5, left: 1.0, right: 1.0),
+                padding: const EdgeInsets.only(
+                    top: 0.5, bottom: 0.5,
+                    left: 1.0, right: 1.0),
                 child: new Column(
                   children: <Widget>[
                     new Image.asset(
-                      pizzaExamples.values.elementAt(index),
+                      pizzaList.elementAt(index).imagePath,
                     ),
                   ],
                 ),
@@ -73,8 +68,9 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
             onTap: (){
                 Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => new Preview(kindOfPizza: pizzaExamples.keys.elementAt(index)),
+                    new MaterialPageRoute(
+                      builder: (context) => new Preview(
+                          pizza: pizzaList.elementAt(index)),
                     ));
             },
           );

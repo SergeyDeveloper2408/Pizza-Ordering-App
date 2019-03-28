@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_ordering_app/navigation/navigation.dart';
 
-
 void main() => runApp(new PizzaOrderingApp());
 
 class PizzaOrderingApp extends StatelessWidget {
@@ -43,15 +42,15 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               new Image.asset(
                 "images/logo/logo.png",
-                width: 150.0 / MediaQuery.of(context).size.aspectRatio,
-                height: 150.0 / MediaQuery.of(context).size.aspectRatio,
+                width: 150.0,
+                height: 150.0,
                 fit: BoxFit.cover,
               ),
               new Text(
                 "Pizza Ordering Demo Home Page",
               ),
               new Container(
-                  margin: EdgeInsets.only(top: (300 * MediaQuery.of(context).size.aspectRatio)),
+                  margin: const EdgeInsets.only(top: 300.0),
                   child: new ButtonTheme(
                       minWidth: 200.0,
                       height: 50.0,
