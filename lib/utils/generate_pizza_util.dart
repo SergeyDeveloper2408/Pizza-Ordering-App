@@ -7,17 +7,17 @@ class GeneratePizzaUtil {
     return [
       new PizzaSize(
         description: "25 cm",
-        price: 25,
+        price: 25.0,
         weight: "350 g"
       ),
       new PizzaSize(
         description: "30 cm",
-        price: 30,
+        price: 30.0,
         weight: "680 g"
       ),
       new PizzaSize(
         description: "35 cm",
-        price: 35,
+        price: 35.0,
         weight: "930 g"
       ),
     ];

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pizza_ordering_app/utils/generate_pizza_util.dart';
-import 'package:pizza_ordering_app/preview/preview.dart';
+import 'package:pizza_ordering_app/view/preview/pizza_preview.dart';
 import 'package:pizza_ordering_app/data/pizza.dart';
+import 'package:badges/badges.dart';
+import 'package:pizza_ordering_app/data/cart.dart';
 
 class PizzaList extends StatelessWidget {
   @override
@@ -23,8 +25,22 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        backgroundColor: Colors.deepOrange[300],
+        backgroundColor: Colors.blue[700],
         title: new Text("Choose your pizza"),
+        actions: <Widget>[
+          new Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: new BadgeIconButton(
+                itemCount: new Cart().items.length, // required
+                icon: new Icon(Icons.shopping_cart), // required
+                badgeColor: Colors.red, // default: Colors.red
+                badgeTextColor: Colors.white, // default: Colors.white
+                hideZeroCount: true, // default: true
+                onPressed: (){
+                  Navigator.of(context).pushNamed("/CartPreview");
+                }),
+          )
+        ],
       ),
       body: new Container(
         child: Column(
@@ -34,10 +50,6 @@ class _PizzaListScreenState extends State<PizzaListScreen> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        child: new Icon(Icons.shopping_cart),
-        onPressed: (){},
       ),
     );
   }

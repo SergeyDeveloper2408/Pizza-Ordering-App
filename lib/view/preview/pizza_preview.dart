@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pizza_ordering_app/data/pizza.dart';
 import 'package:pizza_ordering_app/data/pizza_size.dart';
 import 'package:pizza_ordering_app/utils/generate_pizza_util.dart';
+import 'package:pizza_ordering_app/data/cart.dart';
+import 'package:pizza_ordering_app/data/cart_item.dart';
+import 'package:badges/badges.dart';
+
 
 class Preview extends StatefulWidget {
 
@@ -19,7 +23,7 @@ class _PreviewState extends State<Preview> {
   final List<PizzaSize> _pizzaSizes = GeneratePizzaUtil.getPizzaSizes();
   PizzaSize _pizzaSize;
 
-  String _pizzaPrice;
+  double _pizzaPrice;
   String _pizzaWeight;
 
   _PreviewState(this.pizza);
@@ -33,7 +37,7 @@ class _PreviewState extends State<Preview> {
   void _setPriceAndWeight(PizzaSize pizzaSize){
     setState(() {
       _pizzaSize = pizzaSize;
-      _pizzaPrice = "${(pizza.cost * pizzaSize.price).toString()} \$";
+      _pizzaPrice = (pizza.cost * pizzaSize.price);
       _pizzaWeight = pizzaSize.weight;
     });
   }
@@ -45,6 +49,20 @@ class _PreviewState extends State<Preview> {
       appBar: new AppBar(
         backgroundColor: new Color(pizza.backgroundColor),
         title: new Text(pizza.name),
+        actions: <Widget>[
+          new Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: new BadgeIconButton(
+                itemCount: new Cart().items.length, // required
+                icon: new Icon(Icons.shopping_cart), // required
+                badgeColor: Colors.red, // default: Colors.red
+                badgeTextColor: Colors.white, // default: Colors.white
+                hideZeroCount: true, // default: true
+                onPressed: (){
+                  Navigator.of(context).pushNamed("/CartPreview");
+                }),
+          )
+        ],
       ),
       body: new Container(
         child: new Column(
@@ -71,7 +89,7 @@ class _PreviewState extends State<Preview> {
           new Container(
             alignment: Alignment.bottomRight,
             child: new Text(
-              _pizzaPrice,
+              "${_pizzaPrice.toString()} \$",
               style: new TextStyle(fontSize: 25.0, color: Colors.white),
             ),
           ),
@@ -98,7 +116,24 @@ class _PreviewState extends State<Preview> {
             child: new RaisedButton(
                 child: new Text("Add to cart"),
                 onPressed: (){
-                  Navigator.of(context).pushNamed("/PizzaList");
+
+                  List<CartItem> cartItems = new Cart().items;
+                  CartItem cartItem = new CartItem(
+                      pizza: pizza,
+                      count: 1,
+                      pizzaSize: _pizzaSize
+                  );
+
+                  if (cartItems.isEmpty){
+                    cartItems.add(cartItem);
+                  } else {
+                    if(cartItems.contains(cartItem)){
+                      ++cartItems.elementAt(cartItems.indexOf(cartItem)).count;
+                    } else {
+                      cartItems.add(cartItem);
+                    }
+                  }
+                  setState((){});
                 }
             )
         )

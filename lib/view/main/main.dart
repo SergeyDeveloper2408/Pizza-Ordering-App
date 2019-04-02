@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pizza_ordering_app/navigation/navigation.dart';
+import 'package:pizza_ordering_app/view/navigation/navigation.dart';
 
 void main() => runApp(new PizzaOrderingApp());
 
