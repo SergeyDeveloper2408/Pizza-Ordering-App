@@ -27,8 +27,8 @@ class _CartPreviewState extends State<CartPreview> {
   Widget createBody(){
     Widget list;
     if(itemsList.length > 0){
-      list = new Container(
-        child: new Column(
+      list = new Column(
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             new Container(
                 child: new ListView.builder(
@@ -36,18 +36,36 @@ class _CartPreviewState extends State<CartPreview> {
                     itemBuilder: (BuildContext context, int index)
                       => createCartItemRow(index)
                 ),
+                color: Colors.grey,
                 height: 450.0
             ),
-            new Row(
-              children: <Widget>[
-                new Container(
-                  margin: const EdgeInsets.only(top: 25.0, left: 25.0),
-                  child: new Text('No items', style: new TextStyle(color: Colors.white)),
-                )
-              ],
+            new Container(
+              margin: const EdgeInsets.only(top: 6.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new Container(
+                    child: new Text(
+                        'Total cost: ${new Cart().getTotalCost()} \$',
+                        style: new TextStyle(color: Colors.white)
+                    ),
+                  ),
+                  new Container(
+                    child: new ButtonTheme(
+                        minWidth: 100.0,
+                        buttonColor: Colors.white,
+                        child: new RaisedButton(
+                            child: new Text("Make an order"),
+                            onPressed: (){
+                              Navigator.of(context).pushNamed("/OrderPreview");
+                            }
+                        )
+                    ),
+                  )
+                ],
+              ),
             )
           ]
-        ),
       );
     } else {
       list = new Center(
@@ -63,6 +81,7 @@ class _CartPreviewState extends State<CartPreview> {
           color: new Color(itemsList.elementAt(index).pizza.backgroundColor),
           padding: const EdgeInsets.all(5.0),
           child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               createPizzaImagePreview(index),
               createCounterField(index),
@@ -76,7 +95,6 @@ class _CartPreviewState extends State<CartPreview> {
 
   Widget createPriceAndWeightInfo(int index){
     return new Container(
-      margin: const EdgeInsets.only(left: 25.0),
       child: new Column(
         children: <Widget>[
           new Text(
@@ -94,7 +112,6 @@ class _CartPreviewState extends State<CartPreview> {
 
   Widget createPizzaImagePreview(int index){
     return new Container(
-      margin: const EdgeInsets.only(right: 25.0),
         child: new Image.asset(
             new Cart().items.elementAt(index).pizza.imagePath,
             width: 100.0, height: 100.0
@@ -109,16 +126,13 @@ class _CartPreviewState extends State<CartPreview> {
   }
 
   Widget createRemoveImage(int index){
-    return new Container(
-        margin: const EdgeInsets.only(left: 20.0),
-        child: new IconButton(
+    return new IconButton(
           icon: new Icon(Icons.delete),
           color: Colors.white,
           highlightColor: Colors.white,
           onPressed: (){
             removeItem(index);
-          },
-        )
+          }
     );
   }
 
@@ -147,7 +161,7 @@ class _CartPreviewState extends State<CartPreview> {
           setState(() {
             if (isPositiveButton) {
               ++itemsList.elementAt(index).count;
-            } else {
+            } else if (itemsList.elementAt(index).count > 1) {
               --itemsList.elementAt(index).count;
             }
           });

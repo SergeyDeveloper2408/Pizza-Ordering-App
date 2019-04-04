@@ -6,7 +6,6 @@ import 'package:pizza_ordering_app/data/cart.dart';
 import 'package:pizza_ordering_app/data/cart_item.dart';
 import 'package:badges/badges.dart';
 
-
 class Preview extends StatefulWidget {
 
   final Pizza pizza;
