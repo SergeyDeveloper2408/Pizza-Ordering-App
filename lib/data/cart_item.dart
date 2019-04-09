@@ -7,7 +7,7 @@ class CartItem {
   PizzaSize pizzaSize;
   int count;
 
-  CartItem({this.pizza, this.count, this.pizzaSize});
+  CartItem({this.pizza, this.count = 1, this.pizzaSize});
 
   double get totalCost => pizza.cost * pizzaSize.price * count;
 
